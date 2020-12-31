@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "FlexCare",
+    "slug": "flexcare",
+    "owner": "verybigthings",
+    "privacy": "unlisted",
+    "entryPoint": "./app/index.js",
+    "platforms": [
+      "ios"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-screen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#5A5AF3"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.FlexCare.app",
+      "buildNumber": "0.0.11",
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "FlexCare would like permission to access your photos to be able to upload a profile image",
+        "NSCameraUsageDescription": "Flexcare would like permission to access your camera for taking pictures.",
+        "NSMicrophoneUsageDescription": "Flexcare would like permission to access your microphone for recording audio."
+      }
+    },
+    "android": {
+      "package": "com.FlexCare.app",
+      "versionCode": 11
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "verybigthings",
+            "project": "flexcare",
+            "authToken": "124e0275870e4dd48c9ce9ba599d4fe7f6691c1c4710439793e48f9fb276ab50"
+          }
+        }
+      ]
+    }
+  }
+}

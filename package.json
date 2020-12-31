@@ -1,0 +1,61 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "web": "expo start --web",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.13.1",
+    "@react-native-community/masked-view": "0.1.10",
+    "@react-navigation/bottom-tabs": "^5.11.1",
+    "@react-navigation/drawer": "^5.8.0",
+    "@react-navigation/native": "^5.4.3",
+    "@react-navigation/stack": "^5.4.0",
+    "@rnhooks/dimensions": "^0.0.3",
+    "@use-expo/font": "^2.0.0",
+    "expo": "^39.0.3",
+    "expo-av": "~8.6.0",
+    "expo-constants": "~9.2.0",
+    "expo-device": "~2.3.0",
+    "expo-image-picker": "~9.1.0",
+    "expo-linking": "^1.0.5",
+    "expo-splash-screen": "^0.6.1",
+    "expo-updates": "^0.4.1",
+    "expo-web-browser": "~8.5.0",
+    "lottie-react-native": "^3.5.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.3.tar.gz",
+    "react-native-check-box": "^2.1.7",
+    "react-native-elements": "^3.0.0-alpha.1",
+    "react-native-gesture-handler": "~1.7.0",
+    "react-native-highlight-words": "^1.0.1",
+    "react-native-keyboard-aware-scroll-view": "^0.9.3",
+    "react-native-modal": "^11.5.6",
+    "react-native-reanimated": "~1.13.0",
+    "react-native-safe-area-context": "3.1.4",
+    "react-native-safe-area-view": "^1.1.1",
+    "react-native-screens": "~2.10.1",
+    "react-native-snap-carousel": "^3.9.0",
+    "react-native-svg": "12.1.0",
+    "react-native-web": "~0.13.7",
+    "react-native-webview": "10.7.0",
+    "react-navigation-tabs": "^2.10.1",
+    "react-refresh": "0.8.1",
+    "rn-pdf-reader-js": "^4.1.1",
+    "sentry-expo": "^3.0.3",
+    "tailwind-rn": "^1.1.0",
+    "tailwindcss": "^1.4.6"
+  },
+  "devDependencies": {
+    "babel-preset-expo": "^8.3.0",
+    "shadow-cljs": "^2.9.10"
+  },
+  "react-native": {
+    "xmlhttprequest": false
+  },
+  "private": true
+}
