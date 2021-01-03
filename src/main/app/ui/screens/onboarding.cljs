@@ -17,20 +17,8 @@
             [app.rn.animated :as a]
             [oops.core :refer [ocall]]))
 
-(def items [{:title "One point of access for all your Digital Health programs"
-             :lottie (js/require "../assets/lottie/OnBoarding-1.json")}
-            {:title "Access to a Digital Health professional anytime, anywhere"
-             :lottie (js/require "../assets/lottie/OnBoarding-2.json")}
-            {:title "Skip the waiting room, see a Digital Health provider online"
-             :lottie (js/require "../assets/lottie/OnBoarding-3.json")}])
-
 (def common-timing {:to-value 1 :duration 500 :delay 300 :easing (a/easing :ease)})
 (def common-top-interpolate-params {:output-range [150 0]})
-
-(def dot-bg-color
-  {0 :bg-purple
-   1 :bg-yellow
-   2 :bg-red})
 
 (defnc PersonButtonView [{:keys [navigation register-button-animate]}]
   ($ a/View {:style [{:opacity @register-button-animate
@@ -56,28 +44,12 @@
              {:title "Uloge"
               :onPress #(navigate navigation "role")})))
 
-(defnc SignInAreaView [{:keys [navigation signin-area-animate]}]
-  ($ a/View {:style [{:height 60
-                      :opacity @signin-area-animate
-                      :top (a/interpolate @signin-area-animate common-top-interpolate-params)}
-                     (tw :items-center :justify-center :mb-10)]}
-     ($ View {:style [(tw :flex-row)]}
-        ($ text/BodyMicro "Already registered? ")
-        ($ TouchableOpacity
-           {:onPress #(navigate navigation "signin")}
-           ($ text/BodyMicro {:style [(tw :underline)]} "Sign In")))))
 
 (defnc ScreenRenderer [props]
-  (let [carousel-image-animate (hooks/use-ref (a/value 0))
-        carousel-dots-animate (hooks/use-ref (a/value 0))
-        carousel-text-animate (hooks/use-ref (a/value 0))
-        register-button-animate (hooks/use-ref (a/value 0))
+  (let [register-button-animate (hooks/use-ref (a/value 0))
         signin-area-animate (hooks/use-ref (a/value 0))
         on-render-animate (hooks/use-ref (ocall Animated :stagger 200
-                                                #js [(a/timing @carousel-image-animate common-timing)
-                                                     (a/timing @carousel-dots-animate common-timing)
-                                                     (a/timing @carousel-text-animate common-timing)
-                                                     (a/timing @register-button-animate common-timing)
+                                                #js [(a/timing @register-button-animate common-timing)
                                                      (a/timing @signin-area-animate common-timing)]))]
 
     (hooks/use-effect :once (-> @on-render-animate

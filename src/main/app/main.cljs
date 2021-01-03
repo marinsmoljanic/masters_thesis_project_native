@@ -26,7 +26,13 @@
             [app.ui.screens.account.legal :as legal]
 
             [app.ui.screens.person :as person]
+            [app.ui.screens.person-add :as person-add]
+            [app.ui.screens.person-edit :as person-edit]
+
             [app.ui.screens.project :as project]
+            [app.ui.screens.project-add :as project-add]
+            [app.ui.screens.project-edit :as project-edit]
+
             [app.ui.screens.role :as role]
 
             [app.ui.screens.register :as register]
@@ -89,10 +95,25 @@
              :component project/Screen
              :options (commonScreenOptions {:title "Lista projakata"})})
          ($ (screen main-stack)
+            {:name "project-add"
+             :component project-add/Screen
+             :options (commonScreenOptions {:title "Dodaj novi projekt"})})
+         ($ (screen main-stack)
+            {:name "project-edit"
+             :component project-edit/Screen
+             :options (commonScreenOptions {:title "Uredi podatke projekta"})})
+         ($ (screen main-stack)
              {:name "role"
               :component role/Screen
               :options (commonScreenOptions {:title "Sifrarnik uloga"})})
-
+         ($ (screen main-stack)
+            {:name "person-add"
+             :component person-add/Screen
+             :options (commonScreenOptions {:title "Dodaj novu osobu"})})
+         ($ (screen main-stack)
+            {:name "person-edit"
+             :component person-edit/Screen
+             :options (commonScreenOptions {:title "Uredi podatke osobe"})})
 
 
          ($ (screen main-stack)

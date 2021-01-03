@@ -1,5 +1,9 @@
 (ns app.keechma-app
   (:require [app.controllers.router]
+
+            [app.controllers.forms.person]
+            [app.controllers.forms.project]
+
             [app.controllers.forms.register]
             [app.controllers.forms.signin]
             [app.controllers.forms.forgot-password]
@@ -74,4 +78,15 @@
                          
                          :modal                #:keechma.controller {:params true}
                          
-                         :be-error-handler        #:keechma.controller {:params true}}})
+                         :be-error-handler     #:keechma.controller {:params true}
+
+                         :person-form          #:keechma.controller {:params (fn [{:keys [router]}]
+                                                                                 (:is-active (get (:routes router) [:person-add])))
+                                                                     :deps   [:router :jwt :member-id :entitydb]}
+                         :project-form          #:keechma.controller {:params (fn [{:keys [router]}]
+                                                                                 (:is-active (get (:routes router) [:project-add])))
+                                                                     :deps   [:router :jwt :member-id :entitydb]}
+
+
+
+                         }})
