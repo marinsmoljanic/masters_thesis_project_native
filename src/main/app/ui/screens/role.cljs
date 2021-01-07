@@ -29,6 +29,49 @@
 (defnc RegisterPageContainer [{:keys [children]}]
        ($ View {:style [(tw :h-full :w-full :flex :flex-1 :px-4 :pb-10)]} children))
 
+(defnc SingleFormContainer [{:keys [children]}]
+       ($ View {:style [(tw :w-full :flex :flex-col :px-4 :mt-4)]} children))
+
+(defnc RoleEditForm [{:keys [form-id] :as props}]
+       (let [form-ident [:role-edit-form form-id]]
+            ($ SingleFormContainer
+               (wrapped-input {:keechma.form/controller form-ident
+                               :input/type              :text
+                               :input/attr              :Name
+                               :placeholder             "Naziv uloge"
+                               :autoCapitalize          "none"})
+
+               ($ View {:style [(tw "w-full flex flex-row items-center justify-end")]}
+                  ($ buttons/SmallDelete {:onPress    #(dispatch props form-ident :delete form-id)
+                                    :title      "Obrisi"
+                                    :style      [(tw :bg-red)]
+                                    :text-style [(tw :text-white)]})
+
+                  ($ buttons/Small {:onPress    #(dispatch props form-ident :keechma.form/submit)
+                                    :title      "Spremi"
+                                    :style      [(tw :bg-purple)]
+                                    :text-style [(tw :text-white)]})))))
+
+(defnc RoleCreateForm [{:keys [form-id] :as props}]
+       (let [form-ident [:role-edit-form form-id]]
+            ($ SingleFormContainer
+               (wrapped-input {:keechma.form/controller form-ident
+                               :input/type              :text
+                               :input/attr              :Name
+                               :placeholder             "Naziv uloge"
+                               :autoCapitalize          "none"})
+
+               ($ View {:style [(tw "w-full flex flex-row items-center justify-end")]}
+                  ($ buttons/SmallDelete {:onPress    #(dispatch props form-ident :delete form-id)
+                                          :title      "Obrisi"
+                                          :style      [(tw :bg-red)]
+                                          :text-style [(tw :text-white)]})
+
+                  ($ buttons/Small {:onPress    #(dispatch props form-ident :keechma.form/submit)
+                                    :title      "Spremi"
+                                    :style      [(tw :bg-purple)]
+                                    :text-style [(tw :text-white)]})))))
+
 (defnc ScreenRenderer [props]
        (let [navigation (useNavigation)
              [visible set-visible] (hooks/use-state false)
@@ -36,7 +79,8 @@
              image-upload-top-value (hooks/use-ref (animated/value 500))
              subtitle-top-value (hooks/use-ref (animated/value 500))
              animate-image-upload (hooks/use-ref (animated/timing @image-upload-top-value {:duration duration :to-value 0}))
-             animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))]
+             animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))
+             roles (use-sub props :roles)]
             (hooks/use-effect :once
                               (-> (ocall Animated :stagger 200
                                          #js[@animate-image-upload
@@ -56,19 +100,24 @@
                                                  {:top @subtitle-top-value
                                                   :opacity (animated/interpolate @subtitle-top-value {:input-range [0 25 50] :output-range [1 0.5 0]})}]}
                            ($ View {:style [(tw :flex :items-center :justify-center :mt-5 :mb-6)]}
-                              ($ Text {:style [(tw :text-center :text-gray :px-2)
-                                               { :font-size 17
-                                                :line-height 22}]} "TABLICA ULOGA")
-
-                              ($ View {:style [(tw :flex :flex-row :items-center :justify-center)]}
-                                 ($ Text {:style [(tw :text-center :text-gray :px-2)
-                                                  {:font-size 17
-                                                   :line-height 22}]} "Drugi neki content")
-                                 ($ TouchableOpacity {:onPress #(set-visible true)}
-                                    ($ View {:style [(tw :w-5 :h-5)]}
-                                       ($ Svg {:type :info})))) ))
+                              (map (fn [{:keys [id]}]
+                                       ($ RoleEditForm {:form-id id
+                                                        :key     id
+                                                        &        props}))
+                                   roles))
 
 
-                        ))))))
+                           ($ SingleFormContainer
+                              (wrapped-input {:keechma.form/controller :role-form
+                                              :input/type              :text
+                                              :input/attr              :Name
+                                              :placeholder             "Naziv nove uloge"
+                                              :autoCapitalize          "none"})
+
+                              ($ View {:style [(tw "w-full flex flex-row items-center justify-end")]}
+                                 ($ buttons/Small {:onPress    #(dispatch props :role-form :keechma.form/submit)
+                                                   :title      "Dodaj"
+                                                   :text-style [(tw :text-white)]})))
+                           )))))))
 
 (def Screen (with-keechma ScreenRenderer))

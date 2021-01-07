@@ -1,8 +1,14 @@
 (ns app.keechma-app
   (:require [app.controllers.router]
 
+            [app.controllers.datasources.person]
+            [app.controllers.datasources.project]
+            [app.controllers.datasources.role]
+
             [app.controllers.forms.person]
             [app.controllers.forms.project]
+            [app.controllers.forms.role]
+            [app.controllers.forms.role-edit]
 
             [app.controllers.forms.register]
             [app.controllers.forms.signin]
@@ -80,12 +86,46 @@
                          
                          :be-error-handler     #:keechma.controller {:params true}
 
+                         ;; PERSON
+                         :persons                 #:keechma.controller {:params (fn [{:keys [router]}]
+                                                                                    (:is-active (get (:routes router) [:person])))
+                                                                        :deps   [:router :jwt :entitydb]}
+
                          :person-form          #:keechma.controller {:params (fn [{:keys [router]}]
                                                                                  (:is-active (get (:routes router) [:person-add])))
                                                                      :deps   [:router :jwt :member-id :entitydb]}
+
+                         ;; PROJECT
+                         :projects                #:keechma.controller {:params (fn [{:keys [router]}]
+                                                                                    (:is-active (get (:routes router) [:project])))
+                                                                        :deps   [:router :entitydb]}
+
                          :project-form          #:keechma.controller {:params (fn [{:keys [router]}]
-                                                                                 (:is-active (get (:routes router) [:project-add])))
-                                                                     :deps   [:router :jwt :member-id :entitydb]}
+                                                                                  (:is-active (get (:routes router) [:project-add])))
+                                                                      :deps   [:router :jwt :member-id :entitydb]}
+
+
+                         ;; ROLE
+                         :roles                   #:keechma.controller {:params (fn [{:keys [router]}]
+                                                                                    (or (:is-active (get (:routes router) [:role]))
+                                                                                        (:is-active (get (:routes router) [:person-edit]))))
+                                                                        :deps   [:router :entitydb]}
+
+                         [:role-edit-form]        {:keechma.controller.factory/produce
+                                                                            (fn [{:keys [roles]}]
+                                                                                (->> (map (fn [role] [(:id role) {:keechma.controller/params role}])
+                                                                                          roles)
+                                                                                     (into {})))
+                                                   :keechma.controller/deps [:roles]}
+
+                         :role-form               #:keechma.controller {:params (fn [{:keys [router]}]
+                                                                                    (or (:is-active (get (:routes router) [:role]))
+                                                                                        ;; donji screen treba promijeniti
+                                                                                        (:is-active (get (:routes router) [:person-edit]))))
+                                                                        :deps   [:router :entitydb]}
+
+                         ;; PERSON - ROLE
+
 
 
 

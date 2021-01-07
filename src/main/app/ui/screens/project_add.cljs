@@ -35,7 +35,7 @@
        ($ View {:style [(tw :h-full :w-full :flex :flex-1 :px-4 :pb-10 :mt-4)]} children))
 
 (defnc AddProjectForm [props]
-       (let [meta-state (use-meta-sub props :person-form)
+       (let [meta-state (use-meta-sub props :project-form)
              backend-errors (:error (use-sub props :project-form))]
 
             ($ PageContainer
@@ -67,7 +67,7 @@
                      ($ Errors {:errors backend-errors}))
 
                ($ View {:style [(tw "w-full items-center justify-center mt-8")]}
-                  ($ buttons/Big {:onPress #(dispatch props :person-form :keechma.form/submit)
+                  ($ buttons/Big {:onPress #(dispatch props :project-form :keechma.form/submit)
                                   :title    "Spremi"
                                   :style    [(tw :bg-purple)]
                                   :text-style [(tw :text-white)]})))))

@@ -87,16 +87,13 @@
 
 (defnc ScreenRenderer [props]
        (let [navigation (useNavigation)
+             projects (use-sub props :projects)
              [visible set-visible] (hooks/use-state false)
              image-uri (:uri (use-sub props :image-upload))
              image-upload-top-value (hooks/use-ref (animated/value 500))
              subtitle-top-value (hooks/use-ref (animated/value 500))
              animate-image-upload (hooks/use-ref (animated/timing @image-upload-top-value {:duration duration :to-value 0}))
-             animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))
-             projects-mock-data [{:name "FlexCare"   :description "Little description."   :startDate "10" :endDate "11"}
-                                {:name "IndianLox"   :description "When you see it."      :startDate "9"  :endDate "12"}
-                                {:name "TailwindCO" :description "Enough said."          :startDate "8"  :endDate "16"}
-                                {:name "HiccupExe"   :description "Happy end story type." :startDate "7"  :endDate "17"}]]
+             animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))]
 
             (hooks/use-effect :once
                               (-> (ocall Animated :stagger 200
@@ -116,19 +113,16 @@
                         ($ AnimatedView {:style [(tw :relative)
                                                  {:top @subtitle-top-value
                                                   :opacity (animated/interpolate @subtitle-top-value {:input-range [0 25 50] :output-range [1 0.5 0]})}]}
-
                            ($ TableHeader)
                            (map (fn [project]
-                                    ($ ClickableRow {:name       (:name project)
-                                                     :desc       (:description project)
-                                                     :start      (:startDate project)
-                                                     :end        (:endDate project)
-                                                     :key        (gensym 10)
+                                    ($ ClickableRow {:name       (:Name        project)
+                                                     :desc       (:Description project)
+                                                     :start      (:StartDate   project)
+                                                     :end        (:EndDate     project)
+                                                     :key        (:id          project)
                                                      &           props}))
-                                projects-mock-data)
+                                projects)
 
-                           ($ ProjectButtonView {& props})
-
-                           )))))))
+                           ($ ProjectButtonView {& props}))))))))
 
 (def Screen (with-keechma ScreenRenderer))

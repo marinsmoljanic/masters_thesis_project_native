@@ -80,16 +80,13 @@
 
 (defnc ScreenRenderer [props]
        (let [navigation (useNavigation)
+             persons (use-sub props :persons)
              [visible set-visible] (hooks/use-state false)
              image-uri (:uri (use-sub props :image-upload))
              image-upload-top-value (hooks/use-ref (animated/value 500))
              subtitle-top-value (hooks/use-ref (animated/value 500))
              animate-image-upload (hooks/use-ref (animated/timing @image-upload-top-value {:duration duration :to-value 0}))
-             animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))
-             persons-mock-data [{:name "Marin" :surname "Smoljanic" :personalId "35113149930"}
-                               {:name "Klara" :surname "Rusan"      :personalId "51553132533"}
-                               {:name "Ivica" :surname "Frankic"    :personalId "55532326222"}
-                               {:name "Mirko" :surname "Miric"      :personalId "23522223555"}]]
+             animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))]
 
             (hooks/use-effect :once
                               (-> (ocall Animated :stagger 200
@@ -109,22 +106,15 @@
                         ($ AnimatedView {:style [(tw :relative)
                                                  {:top @subtitle-top-value
                                                   :opacity (animated/interpolate @subtitle-top-value {:input-range [0 25 50] :output-range [1 0.5 0]})}]}
-
                            ($ TableHeader)
                            (map (fn [person]
-                                    ($ ClickableRow {:name       (:name person)
-                                                     :surname    (:surname person)
-                                                     :personalId (:personalId person)
-                                                     :key        (gensym 10)
+                                    ($ ClickableRow {:name       (:FirstName  person)
+                                                     :surname    (:LastName   person)
+                                                     :personalId (:PersonalId person)
+                                                     :key        (:id         person)
                                                      &           props}))
-                                persons-mock-data)
+                                persons)
 
-                           #_($ ClickableRow {& props})
-
-                           #_($ AddNewItemButtonView {:button-animate button-animate & props})
-
-                           ($ PersonButtonView {& props})
-
-                           )))))))
+                           ($ PersonButtonView {& props}))))))))
 
 (def Screen (with-keechma ScreenRenderer))

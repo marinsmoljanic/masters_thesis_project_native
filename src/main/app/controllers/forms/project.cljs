@@ -7,18 +7,18 @@
             [app.validators :as v]
             [app.rn.navigation :refer [navigate]]
             [app.settings :refer [api-key]]
+            [app.gql :refer [m!]]
             [app.api :as api]))
 
 (derive :project-form ::pipelines/controller)
 
 (def pipelines
   {:keechma.form/submit-data (pipeline! [value {:keys [state*] :as ctrl}]
-                                        (println "Ispis iz kontrolera")
 
-                                        #_(m! [:create-project [:createProject]] {:name         (:name        value)
-                                                                                  :description  (:description value)
-                                                                                  :startDate    (:startDate   value)
-                                                                                  :endDate      (:endDate     value)})
+                                        (m! [:create-project [:createProject]] {:name         (:name        value)
+                                                                                :description  (:description value)
+                                                                                :startDate    (:startDate   value)
+                                                                                :endDate      (:endDate     value)})
 
                                         (ctrl/dispatch ctrl :router :redirect "project"))})
 

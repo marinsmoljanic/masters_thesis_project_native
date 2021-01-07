@@ -39,6 +39,30 @@
                                                                               :easing easing})}]}
                   title))))
 
+(defnc Small [{:keys [onPress title transition-value]}]
+      ($ TouchableOpacity
+         {:onPress       onPress
+          :activeOpacity 0.9
+          :style         [(tw :bg-purple :rounded-xl :py-2)
+                          {:width "20%"}]}
+         ($ animated/Text
+            {:style [(tw :text-white :text-center :items-center)
+                     {:font-size 13
+                      :font-weight "400"}]}
+            title)))
+
+(defnc SmallDelete [{:keys [onPress title transition-value]}]
+       ($ TouchableOpacity
+          {:onPress       onPress
+           :activeOpacity 0.9
+           :style         [(tw :bg-red :rounded-xl :py-2)
+                           {:width "20%"}]}
+          ($ animated/Text
+             {:style [(tw :text-white :text-center :items-center)
+                      {:font-size 13
+                       :font-weight "400"}]}
+             title)))
+
 (defnc Rounded [{:keys [onPress title transition-value]}]
        (let [transition-value' (or transition-value animated/constantly-1)]
             ($ TouchableOpacity

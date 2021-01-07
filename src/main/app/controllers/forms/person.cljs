@@ -7,14 +7,15 @@
             [app.validators :as v]
             [app.rn.navigation :refer [navigate]]
             [app.settings :refer [api-key]]
+            [app.gql :refer [m!]]
             [app.api :as api]))
 
 (derive :person-form ::pipelines/controller)
 
 (def pipelines
   {:keechma.form/submit-data (pipeline! [value {:keys [state*] :as ctrl}]
-                                           (println "Ispis iz kontrolera")
-                                           #_(m! [:create-person [:createPerson]] {:firstName (:firstName   value)
+                                           (println "Ispis iz kontrolera" value)
+                                           (m! [:create-person [:createPerson]] {:firstName (:firstName   value)
                                                                                    :lastName  (:lastName    value)
                                                                                    :personalId (:personalId value)})
 
