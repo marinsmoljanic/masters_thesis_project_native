@@ -39,6 +39,19 @@
                                                                               :easing easing})}]}
                   title))))
 
+(defnc Zaduzenje [{:keys [onPress title transition-value]}]
+       (let [transition-value' (or transition-value animated/constantly-1)]
+            ($ TouchableOpacity
+               {:onPress       onPress
+                :activeOpacity 0.9
+                :style         [(tw :bg-purple :rounded-xl :py-2 px-2)
+                                {:width "40%"}]}
+               ($ animated/Text
+                  {:style [(tw :text-white :text-center :items-center)
+                           {:font-size 14
+                            :font-weight "700"}]}
+                  title))))
+
 (defnc Small [{:keys [onPress title transition-value]}]
       ($ TouchableOpacity
          {:onPress       onPress

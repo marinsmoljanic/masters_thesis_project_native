@@ -68,6 +68,27 @@
                                    {:font-size 17
                                     :line-height 22}]} (:assignmentDate props))))))
 
+(defnc ClickableTableItem [{:keys [person role assignmentDate navigation]}]
+       ($ TouchableOpacity
+          {:onPress #(navigate navigation "person-role-by-project" #js{:firstName "Testno ime"})
+           :activeOpacity 0.9
+           :style (tw :flex :flex-row :bg-white :w-full :border-b :border-l :border-r :border-solid :border-gray-light)}
+          ($ View {:style [(tw :flex :items-start :justify-center :pt-2 :pb-2
+                               :border-l :border-r :border-b :border-gray-light :border-solid) {:width "33.33333%"}]}
+             ($ Text {:style [(tw :text-black :px-2)
+                              {:font-size 17
+                               :line-height 22}]} person))
+          ($ View {:style [(tw :flex :items-start :justify-center :pt-2 :pb-2
+                               :border-b :border-gray-light :border-solid) {:width "33.33333%"}]}
+             ($ Text {:style [(tw :text-black :px-2)
+                              {:font-size 17
+                               :line-height 22}]} role))
+          ($ View {:style [(tw :flex :items-start :justify-center :pt-2 :pb-2
+                               :border-l :border-r :border-b :border-gray-light :border-solid) {:width "33.33333%"}]}
+             ($ Text {:style [(tw :text-black :px-2)
+                              {:font-size 17
+                               :line-height 22}]} assignmentDate))))
+
 (defnc EditProjectForm [props]
        (let [meta-state (use-meta-sub props :-form)
              backend-errors (:error (use-sub props :project-form))]
@@ -99,7 +120,7 @@
                (when backend-errors
                      ($ Errors {:errors backend-errors}))
 
-               ($ View {:style [(tw "flex flex-row w-full items-center justify-center mt-8")]}
+               ($ View {:style [(tw "flex flex-row w-full items-center justify-center mt-8 border-solid pb-8 border-b border-gray-light")]}
                   ($ buttons/Medium {:onPress #(dispatch props :project-form :keechma.form/submit)
                                      :title    "Obrisi"
                                      :style    [(tw :bg-purple)]
@@ -107,8 +128,7 @@
                   ($ buttons/Medium {:onPress #(dispatch props :project-form :keechma.form/submit)
                                      :title    "Spremi"
                                      :style    [(tw :bg-purple)]
-                                     :text-style [(tw :text-white)]})
-                  ))))
+                                     :text-style [(tw :text-white)]})))))
 
 (defnc ScreenRenderer [props]
        (let [navigation (useNavigation)
@@ -142,12 +162,23 @@
                                                  {:top @subtitle-top-value
                                                   :opacity (animated/interpolate @subtitle-top-value {:input-range [0 25 50] :output-range [1 0.5 0]})}]}
                            ($ EditProjectForm {& props})
+
+                           ($ View {:style [(tw "flex flex-row justify-between w-full pt-8")]}
+                              ($ Text {:style [(tw :text-gray-light :px-2 :text-center)
+                                               {:font-size 14
+                                                :line-height 22}]} "Zaduzenja na projektu")
+
+                              ($ buttons/Zaduzenje {:onPress #(navigate navigation "person-role")
+                                                    :title    "+ Dodaj"
+                                                    :style    [(tw :bg-purple)]
+                                                    :text-style [(tw :text-white)]}))
                            ($ TableHeader)
                            (map (fn [person-role]
-                                    ($ TableItem {:person         (:person person-role)
-                                                  :role           (:role person-role)
-                                                  :assignmentDate (:assignmentDate person-role)
-                                                  :key            (gensym 10)}))
+                                    ($ ClickableTableItem {:person         (:person person-role)
+                                                           :role           (:role person-role)
+                                                           :assignmentDate (:assignmentDate person-role)
+                                                           :key            (gensym 10)
+                                                           &               props}))
                                 person-role-mock-data))))))))
 
 (def Screen (with-keechma ScreenRenderer))

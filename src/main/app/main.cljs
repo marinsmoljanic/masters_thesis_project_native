@@ -34,6 +34,9 @@
             [app.ui.screens.project-edit :as project-edit]
 
             [app.ui.screens.role :as role]
+            [app.ui.screens.person-role :as person-role]
+            [app.ui.screens.person-role-by-person :as person-role-by-person]
+            [app.ui.screens.person-role-by-project :as person-role-by-project]
 
             [app.ui.screens.register :as register]
             [app.ui.screens.forgot-password :as forget-password]
@@ -114,6 +117,18 @@
             {:name "person-edit"
              :component person-edit/Screen
              :options (commonScreenOptions {:title "Uredi podatke osobe"})})
+         ($ (screen main-stack)
+            {:name "person-role"
+             :component person-role/Screen
+             :options (commonScreenOptions {:title "Dodaj novo zaduzenje"})})
+         ($ (screen main-stack)
+            {:name "person-role-by-person"
+             :component person-role-by-person/Screen
+             :options (commonScreenOptions {:title "Uredi zaduzenje osobe"})})
+         ($ (screen main-stack)
+            {:name "person-role-by-project"
+             :component person-role-by-project/Screen
+             :options (commonScreenOptions {:title "Uredi zaduzenja projekta"})})
 
 
          ($ (screen main-stack)

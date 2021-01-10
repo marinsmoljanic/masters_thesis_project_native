@@ -53,6 +53,9 @@
     :redirect (let [navigation (:ref @state*)]
                 (ocall navigation :navigate payload))
 
+    :redirect-with-params (let [navigation (:ref @state*)]
+                               (ocall navigation :navigate (:route payload) #js{:params (clj->js (:params payload))}))
+
     :reset (let [navigation (:ref @state*)]
              (ocall navigation :reset payload))
     nil))

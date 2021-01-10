@@ -57,7 +57,7 @@
 
     ($ ScreenContainer
        ($ KeyboardAwareScrollView {:style {:flex 1}}
-        ($ View {:style [(tw :items-center :justify-center :px-12 :w-full :h-full)]}
+        ($ View {:style [(tw :items-center :justify-center :px-12 :py-48 :w-full :h-full)]}
            ($ PersonButtonView {:register-button-animate register-button-animate & props})
            ($ ProjectButtonView {:register-button-animate register-button-animate & props})
            ($ RoleButtonView {:register-button-animate register-button-animate & props})

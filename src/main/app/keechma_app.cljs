@@ -6,6 +6,7 @@
             [app.controllers.datasources.role]
 
             [app.controllers.forms.person]
+            [app.controllers.forms.person-edit]
             [app.controllers.forms.project]
             [app.controllers.forms.role]
             [app.controllers.forms.role-edit]
@@ -39,7 +40,7 @@
                                                 :keechma.entitydb/schema   {:user      {:entitydb/id :member_record_id}
                                                                             :providers {:entitydb/id :telemedproviderid}}}
 
-                         :image-upload         #:keechma.controller {:params (fn [{:keys [router]}] 
+                         :image-upload         #:keechma.controller {:params (fn [{:keys [router]}]
                                                                               (or (:is-active (get (:routes router) [:register]))
                                                                                   (:is-active (get (:routes router) [:home]))
                                                                                   (:is-active (get (:routes router) [:account-overview]))))
@@ -75,15 +76,15 @@
 
                          :member-group         #:keechma.controller {:params (active-screen-params [:plan-information])
                                                                      :deps   [:router :jwt :member-id :entitydb]}
-                         
+
                          :profile-picture     #:keechma.controller {:params (fn [{:keys [router member-id]}]
                                                                               (and member-id
                                                                                    (or (:is-active (get (:routes router) [:home]))
                                                                                        (:is-active (get (:routes router) [:account-overview])))))
                                                                      :deps   [:router :jwt :member-id :image-upload]}
-                         
+
                          :modal                #:keechma.controller {:params true}
-                         
+
                          :be-error-handler     #:keechma.controller {:params true}
 
                          ;; PERSON
@@ -94,6 +95,10 @@
                          :person-form          #:keechma.controller {:params (fn [{:keys [router]}]
                                                                                  (:is-active (get (:routes router) [:person-add])))
                                                                      :deps   [:router :jwt :member-id :entitydb]}
+
+                         :person-edit-form        #:keechma.controller {:params (fn [{:keys [router]}]
+                                                                                 (:is-active (get (:routes router) [:person-edit])))
+                                                                        :deps   [:router :entitydb]}
 
                          ;; PROJECT
                          :projects                #:keechma.controller {:params (fn [{:keys [router]}]

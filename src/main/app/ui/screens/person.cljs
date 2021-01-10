@@ -51,7 +51,7 @@
 
 (defnc ClickableRow [{:keys [name surname personalId navigation]}]
       ($ TouchableOpacity
-         {:onPress #(navigate navigation "person-edit")
+         {:onPress #(navigate navigation "person-edit" #js{:firstName "Testno ime"})
           :activeOpacity 0.9
           :style (tw :flex :flex-row :bg-white :w-full :border-b :border-l :border-r :border-solid :border-gray-light)}
 
@@ -80,7 +80,7 @@
 
 (defnc ScreenRenderer [props]
        (let [navigation (useNavigation)
-             persons (use-sub props :persons)
+             persons    (use-sub props :persons)
              [visible set-visible] (hooks/use-state false)
              image-uri (:uri (use-sub props :image-upload))
              image-upload-top-value (hooks/use-ref (animated/value 500))
