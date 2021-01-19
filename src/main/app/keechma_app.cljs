@@ -13,6 +13,7 @@
             [app.controllers.forms.person]
             [app.controllers.forms.project]
             [app.controllers.forms.role-edit]
+            [app.controllers.forms.person-role]
             [app.controllers.forms.person-edit]
             [app.controllers.forms.project-edit]))
 
@@ -37,7 +38,9 @@
                                                                          :deps   [:router :entitydb]}
 
                          :person-edit-form         #:keechma.controller {:params (fn [{:keys [router]}]
-                                                                                     (:is-active (get (:routes router) [:person-edit])))
+                                                                                     (or (:is-active (get (:routes router) [:person-edit]))
+                                                                                         (:is-active (get (:routes router) [:person-role-by-project]))
+                                                                                         (:is-active (get (:routes router) [:person-role-by-person]))))
                                                                          :deps   [:router :entitydb]}
 
                          ;; PROJECT
@@ -51,7 +54,9 @@
                                                                          :deps   [:router :entitydb]}
 
                          :project-edit-form        #:keechma.controller {:params (fn [{:keys [router]}]
-                                                                                     (:is-active (get (:routes router) [:project-edit])))
+                                                                                     (or (:is-active (get (:routes router) [:project-edit]))
+                                                                                         (:is-active (get (:routes router) [:person-role-by-project]))
+                                                                                         (:is-active (get (:routes router) [:person-role-by-person]))))
                                                                          :deps   [:router :entitydb]}
 
 
@@ -75,6 +80,10 @@
                                                                          :deps   [:router :entitydb]}
 
                          ;; UTILITY
+                         :person-role-form         #:keechma.controller {:params (fn [{:keys [router]}]
+                                                                                     (:is-active (get (:routes router) [:person-role])))
+                                                                         :deps   [:router :entitydb :roles :projects :persons]}
+
                          :person-role-by-personid  #:keechma.controller {:params (fn [{:keys [router]}]
                                                                                      (:is-active (get (:routes router) [:person-edit])))
                                                                          :deps   [:router :entitydb :roles :projects]}

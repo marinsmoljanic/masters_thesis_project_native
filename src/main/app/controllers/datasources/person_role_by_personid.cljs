@@ -29,16 +29,10 @@
   (-> (pipeline! [value {:keys [deps-state*] :as ctrl}]
                  (q! [:person-roles [:allPersonRole]] {})
                  (let [roles (:roles @deps-state*)
-                       _ (l/pp "roles---------------------" roles)
-                       _ (l/pp "person-roles-value---------------------" value)
                        projects (:projects @deps-state*)
-                       _ (l/pp "projects---------------------" projects)
                        person-id (str (get-in @deps-state* [:router :routes [:person-edit] :params :id]))
-                       _ (l/pp "person-id---------------------" person-id)
                        person-roles (filter-person-roles-by-personid value person-id)
-                       _ (l/pp "person-roles---------------------" person-roles)
-                       data-enriched-person-roles (vec (enrich-person-roles person-roles roles projects))
-                       _ (l/pp "---------------------" data-enriched-person-roles)]
+                       data-enriched-person-roles (vec (enrich-person-roles person-roles roles projects))]
                       (pipeline! [value {:keys [deps-state*] :as ctrl}]
                             (edb/insert-collection! ctrl :entitydb :person-roles-enriched :person-roles-enriched/list data-enriched-person-roles))))
       (pp/set-queue :load-person-role-by-personid)))

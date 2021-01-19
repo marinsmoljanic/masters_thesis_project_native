@@ -37,9 +37,8 @@
 (defnc AddPersonRoleForm [props]
             ($ PageContainer
                (wrapped-input {:keechma.form/controller :person-role-form
-                               :input/type              :text
+                               :input/type              :select
                                :input/attr              :project
-                               :placeholder             "Projekt"
                                :autoCapitalize          "none"})
 
                (wrapped-input {:keechma.form/controller :person-role-form
@@ -62,7 +61,7 @@
                                :autoCapitalize          "none"})
 
                ($ View {:style [(tw "w-full items-center justify-center mt-8")]}
-                  ($ buttons/Big {:onPress #(dispatch props :person/role-form :keechma.form/submit)
+                  ($ buttons/Big {:onPress #(dispatch props :person-role-form :keechma.form/submit)
                                   :title    "Spremi"
                                   :style    [(tw :bg-purple)]
                                   :text-style [(tw :text-white)]}))))

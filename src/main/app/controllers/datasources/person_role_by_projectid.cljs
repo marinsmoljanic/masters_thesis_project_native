@@ -32,14 +32,9 @@
   (-> (pipeline! [value {:keys [deps-state*] :as ctrl}]
                  (q! [:person-roles [:allPersonRole]] {})
                  (let [roles (:roles @deps-state*)
-                       _ (l/pp "roles---------------------" roles)
-                       _ (l/pp "person-roles-value---------------------" value)
                        persons (:persons @deps-state*)
-                       _ (l/pp "persons---------------------" persons)
                        project-id (str (get-in @deps-state* [:router :routes [:project-edit] :params :id]))
-                       _ (l/pp "project-id---------------------" project-id)
                        person-roles (filter-person-roles-by-projectid value project-id)
-                       _ (l/pp "person-roles---------------------" person-roles)
                        data-enriched-person-roles (vec (enrich-person-roles person-roles roles persons))]
 
                       (pipeline! [value {:keys [deps-state*] :as ctrl}]

@@ -2,7 +2,7 @@
   (:require
    ["react-native" :refer [View TextInput Text Animated TouchableOpacity]]
    ["@react-native-community/datetimepicker" :refer [default] :rename {default DateTimePicker}]
-   ["@react-native-community/datetimepicker" :refer [default] :rename {default DateTimePicker}]
+   ["@react-native-picker/picker" :refer [Picker Item]]
    ["react-native-check-box" :default CheckBox]
    [keechma.next.helix.core :refer [with-keechma use-meta-sub dispatch]]
    [app.lib :refer [$ defnc convert-style]]
@@ -86,6 +86,35 @@
 
 (def InputDate (with-keechma DateInputRenderer))
 
+;; SELECT
+(defnc SelectInputRenderer [{:keechma.form/keys [controller]
+                           :input/keys        [attr]
+                           :as                props}]
+       (let [element-props (get-element-props {} props)
+             value-getter (hooks/use-callback [attr] #(form/get-data-in % attr))
+             value (use-meta-sub props controller value-getter)
+             [focused? set-focused] (hooks/use-state false)]
+            ($ View {:style (tw :w-full :my-2)}
+               ($ Picker {
+                          ;:items
+                          #_[{:title "Football" :value "football" :key "1"}
+                           {:title "Baseball" :value "baseball" :key "2"}
+                           {:title "Hockey" :value "hockey" :key "3"}]
+                          :onValueChange (fn [e date]
+                                             (dispatch props controller :keechma.form.on/change {:value date :attr attr}))}
+                  ($ Item {:label "Java"
+                           :value "Java"
+                           :key    "1"})
+                  ($ Item {:label "Python"
+                           :value "Python"
+                           :key   "2"})
+                  ($ Item {:label "Clojure"
+                           :value "Clojure"
+                           :key   "3"})
+                  ))))
+
+(def InputSelect (with-keechma SelectInputRenderer))
+
 ;; PASSWORD
 (defnc PasswordInputRenderer [{:keechma.form/keys [controller]
                                :input/keys        [attr]
@@ -156,6 +185,7 @@
 (defmulti input (fn [props] (:input/type props)))
 (defmethod input :text [props] ($ InputText {& props}))
 (defmethod input :date [props] ($ InputDate {& props}))
+(defmethod input :select [props] ($ InputSelect {& props}))
 (defmethod input :password [props] ($ InputPassword {& props}))
 (defmethod input :checkbox [props] ($ Checkbox {& props}))
 
@@ -177,6 +207,13 @@
                              :animation/opacity (:opacity props)}]}
       (input props)
       ($ Errors {& props})))
+
+(defmethod wrapped-input :select [props]
+           ($ AnimatedView {:style [(tw :w-full)
+                                    {:animation/top (:top props)
+                                     :animation/opacity (:opacity props)}]}
+              (input props)
+              ($ Errors {& props})))
 
 (defmethod wrapped-input :password [props]
   ($ AnimatedView {:style [(tw :w-full)

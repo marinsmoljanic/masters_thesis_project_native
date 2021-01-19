@@ -69,7 +69,7 @@
                                    {:font-size 17
                                     :line-height 22}]} (:assignmentDate props))))))
 
-(defnc ClickableTableItem [{:keys [personName roleName assignmentDate navigation]}]
+(defnc ClickableTableItem [{:keys [personName roleName assignmentDate project-data navigation]}]
        ($ TouchableOpacity
           {:onPress #(navigate navigation "person-role-by-project" #js{:firstName "Testno ime"
                                                                        :firstNamee "Tu idu ostale varijable"})
@@ -123,8 +123,9 @@
              subtitle-top-value (hooks/use-ref (animated/value 500))
              animate-image-upload (hooks/use-ref (animated/timing @image-upload-top-value {:duration duration :to-value 0}))
              animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))
-             person-roles (use-sub props :person-role-by-projectid)]
-
+             person-roles (use-sub props :person-role-by-projectid)
+             project-edit-data (use-sub props :project-edit-form)
+             ]
             (hooks/use-effect :once
                               (-> (ocall Animated :stagger 200
                                          #js[@animate-image-upload
@@ -162,9 +163,9 @@
                                                            :roleName       (:roleName person-role)
                                                            :assignmentDate (:AssignmentDate person-role)
                                                            :project-code   (:ProjectCode person-role)
-                                                           ;; :project-name   project-name
                                                            :person-role-id (:id person-role)
                                                            :key            (:id person-role)
+                                                           :project-data   project-edit-data
 
                                                            &               props}))
                                 person-roles))))))))

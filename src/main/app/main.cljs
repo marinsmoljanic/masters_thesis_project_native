@@ -80,7 +80,7 @@
          ($ (screen main-stack)
              {:name "role"
               :component role/Screen
-              :options (commonScreenOptions {:title "Sifrarnik uloga"})})
+              :options (commonScreenOptions {:title "Šifrarnik uloga"})})
          ($ (screen main-stack)
             {:name "person-add"
              :component person-add/Screen
@@ -92,15 +92,15 @@
          ($ (screen main-stack)
             {:name "person-role"
              :component person-role/Screen
-             :options (commonScreenOptions {:title "Dodaj novo zaduzenje"})})
+             :options (commonScreenOptions {:title "Dodaj novo zaduženje"})})
          ($ (screen main-stack)
             {:name "person-role-by-person"
              :component person-role-by-person/Screen
-             :options (commonScreenOptions {:title "Uredi zaduzenje osobe"})})
+             :options (commonScreenOptions {:title "Uredi zaduženje osobe"})})
          ($ (screen main-stack)
             {:name "person-role-by-project"
              :component person-role-by-project/Screen
-             :options (commonScreenOptions {:title "Uredi zaduzenja projekta"})})))
+             :options (commonScreenOptions {:title "Uredi zaduženje projekta"})})))
 
 (defonce router-state (atom nil))
 

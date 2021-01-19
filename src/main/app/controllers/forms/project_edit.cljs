@@ -35,3 +35,6 @@
                                (form/wrap pipelines
                                           (v/to-validator {:name        [:not-empty]
                                                            :description [:not-empty]}))))
+
+(defmethod ctrl/derive-state :project-edit-form [_ _ deps-state]
+           {:project-edit (get-in deps-state [:router :routes [:project-edit] :params])})

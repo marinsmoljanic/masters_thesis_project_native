@@ -34,37 +34,43 @@
 (defnc PageContainer [{:keys [children]}]
        ($ View {:style [(tw :h-full :w-full :flex :flex-1 :px-4 :pb-10 :mt-4)]} children))
 
-(defnc AddPersonForm [props]
+(defnc AddPersonRoleForm [props]
        (let [meta-state (use-meta-sub props :person-form)
              backend-errors (:error (use-sub props :person-form))]
 
             ($ PageContainer
-               (wrapped-input {:keechma.form/controller :person-form
+               ($ View {:style [(tw :w-full :px-4 :my-4)]}
+                  ($ Text {:style [(tw :text-black :text-center)]} (str (get-in (:person-data props) [:person-edit :firstName])
+                                                                        " "
+                                                                        (get-in (:person-data props) [:person-edit :lastName]))))
+
+               (wrapped-input {:keechma.form/controller :person-role-edit-project-form
                                :input/type              :text
-                               :input/attr              :firstName
-                               :placeholder             "Ime osobe"
+                               :input/attr              :project
                                :autoCapitalize          "none"})
 
-               (wrapped-input {:keechma.form/controller :person-form
+               (wrapped-input {:keechma.form/controller :person-role-edit-project-form
                                :input/type              :text
-                               :input/attr              :lastName
-                               :placeholder             "Prezime osobe"
+                               :input/attr              :role
                                :autoCapitalize          "none"})
 
-               (wrapped-input {:keechma.form/controller :person-form
-                               :input/type              :text
-                               :input/attr              :personalId
-                               :placeholder             "OIB"
+               ($ View {:style [(tw :w-full :px-4 :my-2)]}
+                  ($ Text {:style [(tw :text-gray-light)]} "Datum dodjele zaduženja"))
+               (wrapped-input {:keechma.form/controller :person-role-edit-project-form
+                               :input/type              :date
+                               :input/attr              :date
                                :autoCapitalize          "none"})
 
-               (when backend-errors
-                     ($ Errors {:errors backend-errors}))
-
-               ($ View {:style [(tw "w-full items-center justify-center mt-8")]}
-                  ($ buttons/Big {:onPress #(dispatch props :person-form :keechma.form/submit)
+               ($ View {:style [(tw "w-full flex flex-row items-center justify-center mt-8")]}
+                  ($ buttons/Medium {:onPress #(dispatch props :person-role-edit-project-form :delete)
+                                  :title    "Obriši"
+                                  :style    [(tw :bg-purple)]
+                                  :text-style [(tw :text-white)]})
+                  ($ buttons/Medium {:onPress #(dispatch props :person-role-edit-project-form :keechma.form/submit)
                                   :title    "Spremi"
                                   :style    [(tw :bg-purple)]
-                                  :text-style [(tw :text-white)]})))))
+                                  :text-style [(tw :text-white)]})
+                  ))))
 
 (defnc ScreenRenderer [props]
        (let [navigation (useNavigation)
@@ -73,7 +79,8 @@
              image-upload-top-value (hooks/use-ref (animated/value 500))
              subtitle-top-value (hooks/use-ref (animated/value 500))
              animate-image-upload (hooks/use-ref (animated/timing @image-upload-top-value {:duration duration :to-value 0}))
-             animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))]
+             animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))
+             person-edit-data (use-sub props :person-edit-form)]
 
             (hooks/use-effect :once
                               (-> (ocall Animated :stagger 200
@@ -94,6 +101,7 @@
                                                  {:top @subtitle-top-value
                                                   :opacity (animated/interpolate @subtitle-top-value {:input-range [0 25 50] :output-range [1 0.5 0]})}]}
 
-                           ($ AddPersonForm {& props}))))))))
+                           ($ AddPersonRoleForm {:person-data person-edit-data
+                                             & props}))))))))
 
 (def Screen (with-keechma ScreenRenderer))

@@ -36,3 +36,5 @@
                                (form/wrap pipelines
                                           (v/to-validator {:firstName  [:not-empty]
                                                            :lastName   [:not-empty]}))))
+(defmethod ctrl/derive-state :person-edit-form [_ _ deps-state]
+           {:person-edit (get-in deps-state [:router :routes [:person-edit] :params])})
