@@ -52,32 +52,38 @@
                               {:font-size 15
                                :line-height 22}]} "Zavrsetak"))))
 
-(defnc ClickableRow [{:keys [name desc start end navigation]}]
-       ($ TouchableOpacity
-          {:onPress #(navigate navigation "project-edit")
-           :activeOpacity 0.9
-           :style (tw :flex :flex-row :bg-white :w-full :border-b :border-l :border-r :border-solid :border-gray-light)}
+(defnc ClickableRow [{:keys [name desc start end navigation id]}]
+       (let [startFormated (first (clojure.string/split start #"T"))
+             endFormated   (first (clojure.string/split end #"T"))]
+            ($ TouchableOpacity
+               {:onPress #(navigate navigation "project-edit" #js{:name        name
+                                                                  :description desc
+                                                                  :startDate   start
+                                                                  :endDate     end
+                                                                  :id          id})
+                :activeOpacity 0.9
+                :style         (tw :flex :flex-row :bg-white :w-full :border-b :border-l :border-r :border-solid :border-gray-light)}
 
-          ($ View {:style [(tw :flex :items-start :justify-center :py-2) {:width "25%"}]}
-             ($ animated/Text
-                {:style [(tw :text-black :px-2)
-                         {:font-size 15}]}
-                name))
-          ($ View {:style [(tw :flex :items-start :justify-center :py-2) {:width "35%"}]}
-             ($ animated/Text
-                {:style [(tw :text-black :px-2)
-                         {:font-size 15}]}
-                desc))
-          ($ View {:style [(tw :flex :items-start :justify-center :py-2) {:width "20%"}]}
-             ($ animated/Text
-                {:style [(tw :text-black :px-2)
-                         {:font-size 15}]}
-                start))
-          ($ View {:style [(tw :flex :items-start :justify-center :py-2) {:width "20%%"}]}
-             ($ animated/Text
-                {:style [(tw :text-black :px-2)
-                         {:font-size 15}]}
-                end))))
+               ($ View {:style [(tw :flex :items-start :justify-center :py-2) {:width "25%"}]}
+                  ($ animated/Text
+                     {:style [(tw :text-black :px-2)
+                              {:font-size 15}]}
+                     name))
+               ($ View {:style [(tw :flex :items-start :justify-center :py-2) {:width "35%"}]}
+                  ($ animated/Text
+                     {:style [(tw :text-black :px-2)
+                              {:font-size 15}]}
+                     desc))
+               ($ View {:style [(tw :flex :items-start :justify-center :py-2) {:width "20%"}]}
+                  ($ animated/Text
+                     {:style [(tw :text-black :px-2)
+                              {:font-size 15}]}
+                     startFormated))
+               ($ View {:style [(tw :flex :items-start :justify-center :py-2) {:width "20%%"}]}
+                  ($ animated/Text
+                     {:style [(tw :text-black :px-2)
+                              {:font-size 15}]}
+                     endFormated)))))
 
 (defnc ProjectButtonView [{:keys [navigation]}]
        ($ View {:style [(tw :mt-8)]}
@@ -119,6 +125,7 @@
                                                      :desc       (:Description project)
                                                      :start      (:StartDate   project)
                                                      :end        (:EndDate     project)
+                                                     :id         (:id          project)
                                                      :key        (:id          project)
                                                      &           props}))
                                 projects)

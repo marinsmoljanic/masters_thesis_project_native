@@ -34,37 +34,38 @@
 (defnc PageContainer [{:keys [children]}]
        ($ View {:style [(tw :h-full :w-full :flex :flex-1 :px-4 :pb-10 :mt-4)]} children))
 
-(defnc AddPersonForm [props]
-       (let [meta-state (use-meta-sub props :person-form)
-             backend-errors (:error (use-sub props :person-form))]
-
+(defnc AddPersonRoleForm [props]
             ($ PageContainer
-               (wrapped-input {:keechma.form/controller :person-form
+               (wrapped-input {:keechma.form/controller :person-role-form
                                :input/type              :text
-                               :input/attr              :firstName
-                               :placeholder             "Ime osobe"
+                               :input/attr              :project
+                               :placeholder             "Projekt"
                                :autoCapitalize          "none"})
 
-               (wrapped-input {:keechma.form/controller :person-form
+               (wrapped-input {:keechma.form/controller :person-role-form
                                :input/type              :text
-                               :input/attr              :lastName
-                               :placeholder             "Prezime osobe"
+                               :input/attr              :role
+                               :placeholder             "Uloga"
                                :autoCapitalize          "none"})
 
-               (wrapped-input {:keechma.form/controller :person-form
+               (wrapped-input {:keechma.form/controller :person-role-form
                                :input/type              :text
-                               :input/attr              :personalId
-                               :placeholder             "OIB"
+                               :input/attr              :person
+                               :placeholder             "Osoba"
                                :autoCapitalize          "none"})
 
-               (when backend-errors
-                     ($ Errors {:errors backend-errors}))
+               ($ View {:style [(tw :w-full :px-4 :my-2)]}
+                  ($ Text {:style [(tw :text-gray-light)]} "Datum dodjele zaduženja"))
+               (wrapped-input {:keechma.form/controller :person-role-form
+                               :input/type              :date
+                               :input/attr              :date
+                               :autoCapitalize          "none"})
 
                ($ View {:style [(tw "w-full items-center justify-center mt-8")]}
-                  ($ buttons/Big {:onPress #(dispatch props :person-form :keechma.form/submit)
+                  ($ buttons/Big {:onPress #(dispatch props :person/role-form :keechma.form/submit)
                                   :title    "Spremi"
                                   :style    [(tw :bg-purple)]
-                                  :text-style [(tw :text-white)]})))))
+                                  :text-style [(tw :text-white)]}))))
 
 (defnc ScreenRenderer [props]
        (let [navigation (useNavigation)
@@ -94,6 +95,6 @@
                                                  {:top @subtitle-top-value
                                                   :opacity (animated/interpolate @subtitle-top-value {:input-range [0 25 50] :output-range [1 0.5 0]})}]}
 
-                           ($ AddPersonForm {& props}))))))))
+                           ($ AddPersonRoleForm {& props}))))))))
 
 (def Screen (with-keechma ScreenRenderer))

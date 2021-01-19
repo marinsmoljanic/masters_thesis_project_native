@@ -48,7 +48,7 @@
                               {:font-size 17
                                :line-height 22}]} "Datum dodjele"))))
 
-(defnc ClickableTableItem [{:keys [project role assignmentDate navigation]}]
+(defnc ClickableTableItem [{:keys [roleName projectName assignmentDate navigation]}]
        ($ TouchableOpacity
           {:onPress #(navigate navigation "person-role-by-person" #js{:firstName "Testno ime"})
            :activeOpacity 0.9
@@ -57,12 +57,12 @@
                                :border-l :border-r :border-b :border-gray-light :border-solid) {:width "33.33333%"}]}
              ($ Text {:style [(tw :text-black :px-2)
                               {:font-size 17
-                               :line-height 22}]} project))
+                               :line-height 22}]} projectName))
           ($ View {:style [(tw :flex :items-start :justify-center :pt-2 :pb-2
                                :border-b :border-gray-light :border-solid) {:width "33.33333%"}]}
              ($ Text {:style [(tw :text-black :px-2)
                               {:font-size 17
-                               :line-height 22}]} role))
+                               :line-height 22}]} roleName))
           ($ View {:style [(tw :flex :items-start :justify-center :pt-2 :pb-2
                                :border-l :border-r :border-b :border-gray-light :border-solid) {:width "33.33333%"}]}
              ($ Text {:style [(tw :text-black :px-2)
@@ -74,18 +74,18 @@
                (wrapped-input {:keechma.form/controller :person-edit-form
                                :input/type              :text
                                :input/attr              :firstName
-                               :placeholder             "Ime osobe"
+                               :placeholder             "Ime"
                                :autoCapitalize          "none"})
 
                (wrapped-input {:keechma.form/controller :person-edit-form
                                :input/type              :text
                                :input/attr              :lastName
-                               :placeholder             "Prezime osobe"
+                               :placeholder             "Prezime"
                                :autoCapitalize          "none"})
 
                ($ View {:style [(tw "flex flex-row w-full items-center justify-center mt-8 border-solid pb-8 border-b border-gray-light")]}
-                  ($ buttons/Medium {:onPress #(dispatch props :person-edit-form :keechma.form/submit)
-                                  :title    "Obrisi"
+                  ($ buttons/Medium {:onPress #(dispatch props :person-edit-form :delete-person)
+                                  :title    "Obriši"
                                   :style    [(tw :mr-2)]
                                   :text-style [(tw :text-white)]})
                   ($ buttons/Medium {:onPress #(dispatch props :person-edit-form :keechma.form/submit)
@@ -101,12 +101,11 @@
              subtitle-top-value (hooks/use-ref (animated/value 500))
              animate-image-upload (hooks/use-ref (animated/timing @image-upload-top-value {:duration duration :to-value 0}))
              animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))
-             person-role-mock-data [{:project "Arkamix"   :role "Developer"  :assignmentDate "11.12.2020"}
-                                    {:project "CertifyEd" :role "QA"         :assignmentDate "04.05.2020"}
-                                    {:project "Kicks"     :role "Lead"       :assignmentDate "01.01.2020"}
-                                    {:project "FlexCare"  :role "Support"    :assignmentDate "11.12.2020"}]
+             first-name (oget route :params.firstName)
+             last-name  (oget route :params.lastName)
+             person-id  (oget route :params.id)
 
-             first-name (oget route :params.firstName)]
+             person-roles (use-sub props :person-role-by-personid)]
 
             (hooks/use-effect :once
                               (-> (ocall Animated :stagger 200
@@ -126,12 +125,15 @@
                         ($ AnimatedView {:style [(tw :relative)
                                                  {:top @subtitle-top-value
                                                   :opacity (animated/interpolate @subtitle-top-value {:input-range [0 25 50] :output-range [1 0.5 0]})}]}
-                           ($ EditPersonForm {& props})
+                           ($ EditPersonForm {:first-name first-name
+                                              :last-name  last-name
+                                              :person-id  person-id
+                                              &           props})
 
                            ($ View {:style [(tw "flex flex-row justify-between w-full pt-8")]}
                               ($ Text {:style [(tw :text-gray-light :px-2 :text-center)
                                                {:font-size 14
-                                                :line-height 22}]} "Zaduzenja osobe")
+                                                :line-height 22}]} "Zaduženja osobe")
 
                               ($ buttons/Zaduzenje {:onPress #(navigate navigation "person-role")
                                                  :title    "+ Dodaj"
@@ -139,11 +141,19 @@
                                                  :text-style [(tw :text-white)]}))
                            ($ TableHeader)
                            (map (fn [person-role]
-                                    ($ ClickableTableItem {:project        (:project person-role)
-                                                           :role           (:role person-role)
-                                                           :assignmentDate (:assignmentDate person-role)
-                                                           :key            (gensym 10)
+                                    ($ ClickableTableItem {:roleName       (:roleName person-role)
+                                                           :projectName    (:projectName person-role)
+                                                           :roleId         (:RoleId person-role)
+                                                           :projectId      (:ProjectCode person-role)
+                                                           :assignmentDate (:AssignmentDate person-role)
+
+                                                           ;; :person-name    person-name
+                                                           ;; :person-surname person-surname
+                                                           ;; :person-id      person-id
+
+                                                           :key            (:id person-role)
+                                                           :id             (:id person-role)
                                                            &               props}))
-                                person-role-mock-data))))))))
+                                person-roles))))))))
 
 (def Screen (with-keechma ScreenRenderer))

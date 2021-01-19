@@ -7,24 +7,8 @@
             [app.ui.svgs :refer [Svg]]
             [app.tailwind :refer [tw get-color]]
             [app.rn.navigation :refer [create-stack-navigator screen navigator]]
-            [app.ui.components.modal :refer [DefaultModal]]
 
             [app.ui.screens.onboarding :as onboarding]
-            [app.ui.screens.home :as home]
-            [app.ui.screens.providers.behavioral-health :as behavioral-health]
-            [app.ui.screens.providers.dermatology :as dermatology]
-            [app.ui.screens.providers.teledentistry :as teledentistry]
-            [app.ui.screens.providers.telemedicine :as telemedicine]
-            [app.ui.screens.providers.telespine :as telespine]
-
-            [app.ui.screens.account-overview :as account-overview]
-            [app.ui.screens.account.settings-and-security :as settings-and-security]
-            [app.ui.screens.account.password-settings :as password-settings]
-            [app.ui.screens.account.faqs :as faqs]
-            [app.ui.screens.account.plan-information :as plan-information]
-            [app.ui.screens.account.flexcare-id-card :as id-card]
-            [app.ui.screens.account.legal :as legal]
-
             [app.ui.screens.person :as person]
             [app.ui.screens.person-add :as person-add]
             [app.ui.screens.person-edit :as person-edit]
@@ -34,14 +18,10 @@
             [app.ui.screens.project-edit :as project-edit]
 
             [app.ui.screens.role :as role]
+
             [app.ui.screens.person-role :as person-role]
             [app.ui.screens.person-role-by-person :as person-role-by-person]
-            [app.ui.screens.person-role-by-project :as person-role-by-project]
-
-            [app.ui.screens.register :as register]
-            [app.ui.screens.forgot-password :as forget-password]
-            [app.ui.screens.email-sent :as email-sent]
-            [app.ui.screens.signin :as signin]))
+            [app.ui.screens.person-role-by-project :as person-role-by-project]))
 
 (def main-stack (create-stack-navigator))
 
@@ -53,8 +33,7 @@
             :text (get-color :gray-dark)
             :border (get-color :gray-dark)}})
 
-(def headerTitleStyle {:fontFamily "EBGaramond-ExtraBold"
-                       :fontSize 22
+(def headerTitleStyle {:fontSize 22
                        :color "#000"})
 
 (def headerStyle {:shadowColor "transparent"
@@ -75,13 +54,6 @@
       :headerLeftContainerStyle #js {:paddingLeft 8}
       :headerShown (some? title)})
 
-(defnc HeaderWithInfo [{:keys [text modal] :as props}]
-  ($ View {:style [{:flex 1} (tw :flex-row :items-center :justify-center)]}
-     ($ Text {:style headerTitleStyle} text)
-     ($ TouchableOpacity
-        {:onPress #(dispatch props :modal :open modal)}
-        ($ View {:style [(tw :w-5 :h-5)]}
-           ($ Svg {:type :info})))))
 
 (defnc Routes [props]
   ($ (navigator main-stack)       
@@ -128,36 +100,7 @@
          ($ (screen main-stack)
             {:name "person-role-by-project"
              :component person-role-by-project/Screen
-             :options (commonScreenOptions {:title "Uredi zaduzenja projekta"})})
-
-
-         ($ (screen main-stack)
-            {:name "register"
-             :component register/Screen
-             :options (commonScreenOptions {:title "Register"})})
-         ($ (screen main-stack)
-            {:name "signin"
-             :component signin/Screen
-             :options (commonScreenOptions {:title "Sign in"})})
-         ($ (screen main-stack)
-            {:name "forgot-password"
-             :component forget-password/Screen
-             :options (commonScreenOptions {:title ""})})
-         ($ (screen main-stack)
-            {:name "email-sent"
-             :component email-sent/Screen
-             :options (commonScreenOptions {:title ""})})
-         ($ (screen main-stack)
-            {:name "home"
-             :component home/Screen
-             :options (commonScreenOptions {})})
-         ($ (screen main-stack)
-            {:name "legal"
-             :component legal/Screen
-             :options (commonScreenOptions {:title "Legal"})})))
-
-(defnc Main [props]
-      ($ Routes {& props}))
+             :options (commonScreenOptions {:title "Uredi zaduzenja projekta"})})))
 
 (defonce router-state (atom nil))
 
@@ -171,7 +114,6 @@
         :ref navigation-ref*
         :initialState @router-state
         :theme (clj->js theme)}
-       ($ Main {& props})
-       ($ DefaultModal))))
+       ($ Routes {& props}))))
 
 (def Root (with-keechma RootRenderer))

@@ -84,7 +84,6 @@ mutation CreatePersonRole($project: String!, $role: String!, $person: String!, $
 
 
 
-
 mutation UpdatePerson($id: ID, $lastName: String!, $firstName: String!){
     updatePerson(id: $id, LastName: $lastName, FirstName: $firstName) {
         person{

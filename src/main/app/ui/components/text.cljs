@@ -10,8 +10,7 @@
 
 (defnc H1 [{:keys [children style]}]
   ($ Text
-     {:style [{:font-family "EBGaramond-ExtraBold"
-               :line-height 48
+     {:style [{:line-height 48
                :font-size 40
                :font-weight "800"}
               style]}
@@ -20,8 +19,7 @@
 (defnc H2 [{:keys [children style]}]
   ($ Text 
      {:allowFontScaling false
-      :style [{:font-family "EBGaramond-ExtraBold"
-               :line-height 38
+      :style [{:line-height 38
                :font-size 32
                :font-weight "800"}
               style]}
@@ -29,8 +27,7 @@
 
 (defnc H3 [{:keys [children style]}]
   ($ Text
-     {:style [{:font-family "EBGaramond-ExtraBold"
-               :line-height 22
+     {:style [{:line-height 22
                :font-size 22
                :font-weight "800"}
               style]}
@@ -38,8 +35,7 @@
 
 (defnc H4 [{:keys [children style]}]
   ($ Text
-     {:style [{:font-family "EBGaramond-ExtraBold"
-               :line-height 18
+     {:style [{:line-height 18
                :font-size 18
                :font-weight "800"}
               style]}

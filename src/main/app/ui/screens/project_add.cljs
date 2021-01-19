@@ -51,14 +51,17 @@
                                :placeholder             "Opis projekta"
                                :autoCapitalize          "none"})
 
+               ($ View {:style [(tw :w-full :px-4 :mt-2)]}
+                  ($ Text {:style [(tw :text-gray-light)]} "Datum početka"))
                (wrapped-input {:keechma.form/controller :project-form
-                               :input/type              :text
+                               :input/type              :date
                                :input/attr              :startDate
                                :placeholder             "Datum pocetka"
                                :autoCapitalize          "none"})
-
+               ($ View {:style [(tw :w-full :px-4 :my-2)]}
+                  ($ Text {:style [(tw :text-gray-light)]} "Datum završetka"))
                (wrapped-input {:keechma.form/controller :project-form
-                               :input/type              :text
+                               :input/type              :date
                                :input/attr              :endDate
                                :placeholder             "Datum zavrsetka"
                                :autoCapitalize          "none"})

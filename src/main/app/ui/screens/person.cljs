@@ -49,9 +49,12 @@
                               {:font-size 17
                                :line-height 22}]} "OIB"))))
 
-(defnc ClickableRow [{:keys [name surname personalId navigation]}]
+(defnc ClickableRow [{:keys [name surname personalId id navigation]}]
       ($ TouchableOpacity
-         {:onPress #(navigate navigation "person-edit" #js{:firstName "Testno ime"})
+         {:onPress #(navigate navigation "person-edit" #js{:firstName name
+                                                           :lastName  surname
+                                                           :id        id})
+
           :activeOpacity 0.9
           :style (tw :flex :flex-row :bg-white :w-full :border-b :border-l :border-r :border-solid :border-gray-light)}
 
@@ -111,6 +114,7 @@
                                     ($ ClickableRow {:name       (:FirstName  person)
                                                      :surname    (:LastName   person)
                                                      :personalId (:PersonalId person)
+                                                     :id         (:id         person)
                                                      :key        (:id         person)
                                                      &           props}))
                                 persons)

@@ -4,7 +4,8 @@
             [keechma.pipelines.core :as pp :refer-macros [pipeline!]]
             [keechma.next.controllers.form :as form]
             [keechma.next.controllers.router :as router]
-            [app.gql :refer [m!]]
+            [keechma.next.controllers.entitydb :as edb]
+            [app.gql :refer [m! q!]]
             [app.validators :as v]))
 
 (derive :role-form ::pipelines/controller)
@@ -12,7 +13,8 @@
 (def pipelines
   {:keechma.form/submit-data (pipeline! [value {:keys [deps-state*] :as ctrl}]
                                         (m! [:create-role [:createRole]] {:Name (:Name value)})
-                                        (ctrl/dispatch ctrl :router :redirect "onboarding"))})
+                                        (q! [:roles [:allRole]] {})
+                                        (edb/insert-collection! ctrl :entitydb :role :role/list value))})
 
 (defmethod ctrl/start :role-form [_ state _ _]
            {:is-project-form-open? nil})

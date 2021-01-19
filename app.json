@@ -11,10 +11,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash-screen.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#5A5AF3"
+    "splash": {"backgroundColor": "#5A5AF3"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

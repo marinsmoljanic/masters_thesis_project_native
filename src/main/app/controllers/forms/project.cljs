@@ -14,11 +14,10 @@
 
 (def pipelines
   {:keechma.form/submit-data (pipeline! [value {:keys [state*] :as ctrl}]
-
-                                        (m! [:create-project [:createProject]] {:name         (:name        value)
-                                                                                :description  (:description value)
-                                                                                :startDate    (:startDate   value)
-                                                                                :endDate      (:endDate     value)})
+                                        (m! [:create-project [:createProject]] {:name        (:name value)
+                                                                                :description (:description value)
+                                                                                :startDate   (:startDate value)
+                                                                                :endDate     (:endDate value)})
 
                                         (ctrl/dispatch ctrl :router :redirect "project"))})
 

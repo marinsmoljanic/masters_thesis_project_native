@@ -14,6 +14,7 @@
 
             [app.rn.animated :as a]
             [app.rn.animated :as animated]
+            [keechma.next.toolbox.logging :as l]
             [app.rn.navigation :refer [navigate]]
 
             [keechma.next.controllers.form :as form]
@@ -68,21 +69,22 @@
                                    {:font-size 17
                                     :line-height 22}]} (:assignmentDate props))))))
 
-(defnc ClickableTableItem [{:keys [person role assignmentDate navigation]}]
+(defnc ClickableTableItem [{:keys [personName roleName assignmentDate navigation]}]
        ($ TouchableOpacity
-          {:onPress #(navigate navigation "person-role-by-project" #js{:firstName "Testno ime"})
+          {:onPress #(navigate navigation "person-role-by-project" #js{:firstName "Testno ime"
+                                                                       :firstNamee "Tu idu ostale varijable"})
            :activeOpacity 0.9
            :style (tw :flex :flex-row :bg-white :w-full :border-b :border-l :border-r :border-solid :border-gray-light)}
           ($ View {:style [(tw :flex :items-start :justify-center :pt-2 :pb-2
                                :border-l :border-r :border-b :border-gray-light :border-solid) {:width "33.33333%"}]}
              ($ Text {:style [(tw :text-black :px-2)
                               {:font-size 17
-                               :line-height 22}]} person))
+                               :line-height 22}]} personName))
           ($ View {:style [(tw :flex :items-start :justify-center :pt-2 :pb-2
                                :border-b :border-gray-light :border-solid) {:width "33.33333%"}]}
              ($ Text {:style [(tw :text-black :px-2)
                               {:font-size 17
-                               :line-height 22}]} role))
+                               :line-height 22}]} roleName))
           ($ View {:style [(tw :flex :items-start :justify-center :pt-2 :pb-2
                                :border-l :border-r :border-b :border-gray-light :border-solid) {:width "33.33333%"}]}
              ($ Text {:style [(tw :text-black :px-2)
@@ -90,45 +92,28 @@
                                :line-height 22}]} assignmentDate))))
 
 (defnc EditProjectForm [props]
-       (let [meta-state (use-meta-sub props :-form)
-             backend-errors (:error (use-sub props :project-form))]
+    ($ PageContainer
+       (wrapped-input {:keechma.form/controller :project-edit-form
+                       :input/type              :text
+                       :input/attr              :name
+                       :placeholder             "Naziv projekta"
+                       :autoCapitalize          "none"})
 
-            ($ PageContainer
-               (wrapped-input {:keechma.form/controller :project-form
-                               :input/type              :text
-                               :input/attr              :name
-                               :placeholder             "Naziv projekta"
-                               :autoCapitalize          "none"})
+       (wrapped-input {:keechma.form/controller :project-edit-form
+                       :input/type              :text
+                       :input/attr              :description
+                       :placeholder             "Opis projekta"
+                       :autoCapitalize          "none"})
 
-               (wrapped-input {:keechma.form/controller :project-form
-                               :input/type              :text
-                               :input/attr              :description
-                               :placeholder             "Opis projekta"
-                               :autoCapitalize          "none"})
-
-               (wrapped-input {:keechma.form/controller :project-form
-                               :input/type              :text
-                               :input/attr              :startDate
-                               :placeholder             "Datum pocetka"
-                               :autoCapitalize          "none"})
-
-               (wrapped-input {:keechma.form/controller :project-form
-                               :input/type              :text
-                               :input/attr              :endDate
-                               :placeholder             "Datum zavrsetka"
-                               :autoCapitalize          "none"})
-               (when backend-errors
-                     ($ Errors {:errors backend-errors}))
-
-               ($ View {:style [(tw "flex flex-row w-full items-center justify-center mt-8 border-solid pb-8 border-b border-gray-light")]}
-                  ($ buttons/Medium {:onPress #(dispatch props :project-form :keechma.form/submit)
-                                     :title    "Obrisi"
-                                     :style    [(tw :bg-purple)]
-                                     :text-style [(tw :text-white)]})
-                  ($ buttons/Medium {:onPress #(dispatch props :project-form :keechma.form/submit)
-                                     :title    "Spremi"
-                                     :style    [(tw :bg-purple)]
-                                     :text-style [(tw :text-white)]})))))
+       ($ View {:style [(tw "flex flex-row w-full items-center justify-center mt-8 border-solid pb-8 border-b border-gray-light")]}
+          ($ buttons/Medium {:onPress #(dispatch props :project-edit-form :delete-project)
+                             :title    "Obriši"
+                             :style    [(tw :bg-purple)]
+                             :text-style [(tw :text-white)]})
+          ($ buttons/Medium {:onPress #(dispatch props :project-edit-form :keechma.form/submit)
+                             :title    "Spremi"
+                             :style    [(tw :bg-purple)]
+                             :text-style [(tw :text-white)]}))))
 
 (defnc ScreenRenderer [props]
        (let [navigation (useNavigation)
@@ -138,10 +123,7 @@
              subtitle-top-value (hooks/use-ref (animated/value 500))
              animate-image-upload (hooks/use-ref (animated/timing @image-upload-top-value {:duration duration :to-value 0}))
              animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))
-             person-role-mock-data [{:person "Ivica"  :role "Developer"  :assignmentDate "11.12.2020"}
-                                    {:person "Franc"  :role "QA"         :assignmentDate "04.05.2020"}
-                                    {:person "Lepej"  :role "Lead"       :assignmentDate "01.01.2020"}
-                                    {:person "Stanga" :role "Support"    :assignmentDate "11.12.2020"}]]
+             person-roles (use-sub props :person-role-by-projectid)]
 
             (hooks/use-effect :once
                               (-> (ocall Animated :stagger 200
@@ -163,10 +145,10 @@
                                                   :opacity (animated/interpolate @subtitle-top-value {:input-range [0 25 50] :output-range [1 0.5 0]})}]}
                            ($ EditProjectForm {& props})
 
-                           ($ View {:style [(tw "flex flex-row justify-between w-full pt-8")]}
+                           ($ View {:style [(tw "flex flex-row justify-between w-full")]}
                               ($ Text {:style [(tw :text-gray-light :px-2 :text-center)
                                                {:font-size 14
-                                                :line-height 22}]} "Zaduzenja na projektu")
+                                                :line-height 22}]} "Zaduženja na projektu")
 
                               ($ buttons/Zaduzenje {:onPress #(navigate navigation "person-role")
                                                     :title    "+ Dodaj"
@@ -174,11 +156,17 @@
                                                     :text-style [(tw :text-white)]}))
                            ($ TableHeader)
                            (map (fn [person-role]
-                                    ($ ClickableTableItem {:person         (:person person-role)
-                                                           :role           (:role person-role)
-                                                           :assignmentDate (:assignmentDate person-role)
-                                                           :key            (gensym 10)
+                                    ($ ClickableTableItem {:personId       (:PersonId person-role)
+                                                           :roleId         (:RoleId person-role)
+                                                           :personName     (:personName person-role)
+                                                           :roleName       (:roleName person-role)
+                                                           :assignmentDate (:AssignmentDate person-role)
+                                                           :project-code   (:ProjectCode person-role)
+                                                           ;; :project-name   project-name
+                                                           :person-role-id (:id person-role)
+                                                           :key            (:id person-role)
+
                                                            &               props}))
-                                person-role-mock-data))))))))
+                                person-roles))))))))
 
 (def Screen (with-keechma ScreenRenderer))

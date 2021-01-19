@@ -1,6 +1,8 @@
 (ns app.ui.components.inputs
   (:require
    ["react-native" :refer [View TextInput Text Animated TouchableOpacity]]
+   ["@react-native-community/datetimepicker" :refer [default] :rename {default DateTimePicker}]
+   ["@react-native-community/datetimepicker" :refer [default] :rename {default DateTimePicker}]
    ["react-native-check-box" :default CheckBox]
    [keechma.next.helix.core :refer [with-keechma use-meta-sub dispatch]]
    [app.lib :refer [$ defnc convert-style]]
@@ -69,6 +71,21 @@
 
 (def InputText (with-keechma TextInputRenderer))
 
+;; DATE
+(defnc DateInputRenderer [{:keechma.form/keys [controller]
+                           :input/keys        [attr]
+                           :as                props}]
+       (let [element-props (get-element-props {} props)
+             value-getter (hooks/use-callback [attr] #(form/get-data-in % attr))
+             value (use-meta-sub props controller value-getter)
+             [focused? set-focused] (hooks/use-state false)]
+            ($ View {:style (tw :w-full :my-2)}
+                 ($ DateTimePicker {:value    (or value (js/Date.))
+                                    :onChange (fn [e date]
+                                                  (dispatch props controller :keechma.form.on/change {:value date :attr attr}))}))))
+
+(def InputDate (with-keechma DateInputRenderer))
+
 ;; PASSWORD
 (defnc PasswordInputRenderer [{:keechma.form/keys [controller]
                                :input/keys        [attr]
@@ -106,8 +123,6 @@
 
 
 ;; CHECKBOX
-
-
 (defnc CheckboxRenderer [{:keechma.form/keys [controller]
                           :input/keys        [attr]
                           :as                props}]
@@ -140,6 +155,7 @@
 
 (defmulti input (fn [props] (:input/type props)))
 (defmethod input :text [props] ($ InputText {& props}))
+(defmethod input :date [props] ($ InputDate {& props}))
 (defmethod input :password [props] ($ InputPassword {& props}))
 (defmethod input :checkbox [props] ($ Checkbox {& props}))
 
@@ -154,6 +170,13 @@
                             :animation/opacity (:opacity props)}]}
      (input props)
      ($ Errors {& props})))
+
+(defmethod wrapped-input :date [props]
+   ($ AnimatedView {:style [(tw :w-full)
+                            {:animation/top (:top props)
+                             :animation/opacity (:opacity props)}]}
+      (input props)
+      ($ Errors {& props})))
 
 (defmethod wrapped-input :password [props]
   ($ AnimatedView {:style [(tw :w-full)
