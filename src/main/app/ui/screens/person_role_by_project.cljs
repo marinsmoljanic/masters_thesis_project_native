@@ -41,30 +41,30 @@
                ($ View {:style [(tw :w-full :px-4 :my-4)]}
                   ($ Text {:style [(tw :text-black :text-center)]} (:project-name props)))
 
-               (wrapped-input {:keechma.form/controller :person-form
-                               :input/type              :text
+               (wrapped-input {:keechma.form/controller :person-role-edit-project-form
+                               :input/type              :select
                                :input/attr              :person
                                :autoCapitalize          "none"})
 
-               (wrapped-input {:keechma.form/controller :person-form
+               (wrapped-input {:keechma.form/controller :person-role-edit-project-form
                                :input/type              :text
                                :input/attr              :role
                                :autoCapitalize          "none"})
 
                ($ View {:style [(tw :w-full :px-4 :my-2)]}
                   ($ Text {:style [(tw :text-gray-light)]} "Datum dodjele zaduženja"))
-               (wrapped-input {:keechma.form/controller :person-form
+               (wrapped-input {:keechma.form/controller :person-role-edit-project-form
                                :input/type              :date
                                :input/attr              :date
                                :placeholder             "OIB"
                                :autoCapitalize          "none"})
 
                ($ View {:style [(tw "w-full flex flex-row items-center justify-center mt-8")]}
-                  ($ buttons/Medium {:onPress #(dispatch props :person-form :delete)
+                  ($ buttons/Medium {:onPress #(dispatch props :person-role-edit-project-form :delete)
                                   :title    "Obriši"
                                   :style    [(tw :bg-purple)]
                                   :text-style [(tw :text-white)]})
-                  ($ buttons/Medium {:onPress #(dispatch props :person-form :keechma.form/submit)
+                  ($ buttons/Medium {:onPress #(dispatch props :person-role-edit-project-form :keechma.form/submit)
                                   :title    "Spremi"
                                   :style    [(tw :bg-purple)]
                                   :text-style [(tw :text-white)]})
@@ -79,10 +79,7 @@
              animate-image-upload (hooks/use-ref (animated/timing @image-upload-top-value {:duration duration :to-value 0}))
              animate-subtitle (hooks/use-ref (animated/timing @subtitle-top-value {:duration duration :to-value 0}))
              project-edit-data (use-sub props :project-edit-form)
-
-             _ (println "______________________________________________" project-edit-data)
-
-             ]
+             _ (println "______________________________________________" project-edit-data)]
 
             (hooks/use-effect :once
                               (-> (ocall Animated :stagger 200

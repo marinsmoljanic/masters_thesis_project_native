@@ -15,7 +15,9 @@
             [app.controllers.forms.role-edit]
             [app.controllers.forms.person-role]
             [app.controllers.forms.person-edit]
-            [app.controllers.forms.project-edit]))
+            [app.controllers.forms.project-edit]
+            [app.controllers.forms.person-role-edit]
+            [app.controllers.forms.person-role-edit-project]))
 
 (def app
   {:keechma/controllers {:router                   #:keechma.controller {:params true}
@@ -84,12 +86,21 @@
                                                                                      (:is-active (get (:routes router) [:person-role])))
                                                                          :deps   [:router :entitydb :roles :projects :persons]}
 
+
                          :person-role-by-personid  #:keechma.controller {:params (fn [{:keys [router]}]
                                                                                      (:is-active (get (:routes router) [:person-edit])))
                                                                          :deps   [:router :entitydb :roles :projects]}
 
                          :person-role-by-projectid #:keechma.controller {:params (fn [{:keys [router]}]
                                                                                      (:is-active (get (:routes router) [:project-edit])))
+                                                                         :deps   [:router :entitydb :roles :persons]}
+
+                         :person-role-edit-form  #:keechma.controller {:params (fn [{:keys [router]}]
+                                                                                     (:is-active (get (:routes router) [:person-role-by-person])))
+                                                                         :deps   [:router :entitydb :roles :projects]}
+
+                         :person-role-edit-project-form #:keechma.controller {:params (fn [{:keys [router]}]
+                                                                                     (:is-active (get (:routes router) [:person-role-by-project])))
                                                                          :deps   [:router :entitydb :roles :persons]}
 
                          }})

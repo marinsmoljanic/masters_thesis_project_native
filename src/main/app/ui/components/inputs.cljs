@@ -2,7 +2,7 @@
   (:require
    ["react-native" :refer [View TextInput Text Animated TouchableOpacity]]
    ["@react-native-community/datetimepicker" :refer [default] :rename {default DateTimePicker}]
-   ["@react-native-picker/picker" :refer [Picker Item]]
+   ["@react-native-picker/picker" :refer [Picker]]
    ["react-native-check-box" :default CheckBox]
    [keechma.next.helix.core :refer [with-keechma use-meta-sub dispatch]]
    [app.lib :refer [$ defnc convert-style]]
@@ -17,6 +17,8 @@
    [app.ui.svgs :refer [Svg]]
    [keechma.next.controllers.form :as form]
    [app.validators :refer [get-validator-message]]))
+
+(def Item (oget Picker :Item))
 
 (defn get-element-props
   [default-props props]
@@ -94,14 +96,17 @@
              value-getter (hooks/use-callback [attr] #(form/get-data-in % attr))
              value (use-meta-sub props controller value-getter)
              [focused? set-focused] (hooks/use-state false)]
+            (println value attr)
             ($ View {:style (tw :w-full :my-2)}
                ($ Picker {
                           ;:items
                           #_[{:title "Football" :value "football" :key "1"}
                            {:title "Baseball" :value "baseball" :key "2"}
                            {:title "Hockey" :value "hockey" :key "3"}]
-                          :onValueChange (fn [e date]
-                                             (dispatch props controller :keechma.form.on/change {:value date :attr attr}))}
+                          :selectedValue value
+                          :onValueChange (fn [value index]
+                                             (println "ON VALUE CHANGE" value)
+                                             (dispatch props controller :keechma.form.on/change {:value value :attr attr}))}
                   ($ Item {:label "Java"
                            :value "Java"
                            :key    "1"})

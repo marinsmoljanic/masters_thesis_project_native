@@ -68,7 +68,7 @@
          ($ (screen main-stack)
             {:name "project"
              :component project/Screen
-             :options (commonScreenOptions {:title "Lista projakata"})})
+             :options (commonScreenOptions {:title "Lista projekata"})})
          ($ (screen main-stack)
             {:name "project-add"
              :component project-add/Screen
@@ -100,7 +100,7 @@
          ($ (screen main-stack)
             {:name "person-role-by-project"
              :component person-role-by-project/Screen
-             :options (commonScreenOptions {:title "Uredi zaduženje projekta"})})))
+             :options (commonScreenOptions {:title "Uredi zaduženje projektaaa"})})))
 
 (defonce router-state (atom nil))
 
